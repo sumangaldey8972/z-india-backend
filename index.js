@@ -3,15 +3,19 @@ const cors = require("cors")
 const session = require("express-session")
 const dotenv = require("dotenv")
 const mongoStore = require("connect-mongo")
+const fileUpload = require("express-fileupload")
+
+
 const { app_configuration } = require("./config/app.config")
 const connect_mongodb = require("./connections/mongo.connection")
-const { serverRoutes, authRoutes, sessionRoutes } = require("./routes/common")
+const { serverRoutes, authRoutes, sessionRoutes, projectRoutes } = require("./routes/common")
 
 function setupMiddleware(app) {
     dotenv.config()
     app.use(express.json({ limit: "1024mb" }))
     app.use(cors({ origin: true, credentials: true }))
     app.use(express.urlencoded({ extended: true }))
+    app.use(fileUpload())
     app.use(
         session({
             secret: app_configuration.SESSION_SECRET,
@@ -28,6 +32,7 @@ function setupRoutes(app) {
     app.use('/', serverRoutes)
     app.use('/auth', authRoutes)
     app.use('/session', sessionRoutes)
+    app.use('/project', projectRoutes)
 }
 
 
