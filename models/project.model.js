@@ -10,7 +10,7 @@ const project_schema = mongoose.Schema(
     posted_on: { type: Date },
     status: { type: String },
     configuration: [{ bedrooms: Number, balcony: Number }],
-    images: [{ type: String }],
+    images: [{ data: Buffer, mimeType: String }],
     full_address: { type: String },
     number_of_floores: { type: String },
     facing: { type: String },

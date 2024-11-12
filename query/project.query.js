@@ -1,6 +1,7 @@
+const { uploadFile } = require("../helper/upload.helper");
 const projectModel = require("../models/project.model");
 
-const createProjectQuery = async (details) => {
+const createProjectQuery = async (details, images) => {
   try {
     const {
       project_name,
@@ -19,7 +20,15 @@ const createProjectQuery = async (details) => {
       about_propoerty,
     } = details;
 
-    console.log(details.places_nearby);
+    console.log(images.images);
+
+    let uploadUrls = [];
+    if (images.images.length > 0) {
+      for (let i = 0; i < images.images.length; i++) {
+        // let url = await uploadFile(images.images[i].data);
+        uploadUrls.push(images.images[i].data);
+      }
+    }
 
     const newProject = await projectModel.create({
       project_name: project_name,
@@ -36,6 +45,7 @@ const createProjectQuery = async (details) => {
       iframe_url: iframe_url,
       places_nearby: places_nearby,
       about_propoerty: about_propoerty,
+      images: uploadUrls,
     });
 
     if (newProject) {
@@ -63,7 +73,14 @@ const getProjectQuery = async () => {
       return Promise.resolve({
         status: true,
         statusCode: 200,
-        data: projectList,
+        // data: projectList,
+        data: projectList.map((project) => ({
+          ...project.toObject(),
+          images: project.images.map((image) => ({
+            data: image.data.toString("base64"), // Convert each image buffer to base64
+            mimetype: image.mimetype, // Access mimetype at the image level
+          })),
+        })),
       });
     } else {
       return Promise.resolve({
