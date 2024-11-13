@@ -31,7 +31,13 @@ const createProjectQuery = async (details, images) => {
 					mimeType: images.images[i].mimetype,
 				});
 			}
-			console.log(uploadUrls);
+			// console.log("upload urls", uploadUrls);
+		} else if (images.images) {
+			//for single image upload
+			uploadUrls.push({
+				data: images.images.data,
+				mimeType: images.images.mimeType,
+			});
 		}
 
 		const newProject = await projectModel.create({
@@ -70,6 +76,25 @@ const createProjectQuery = async (details, images) => {
 	}
 };
 
+// Helper function to process images
+const processImages = (images) => {
+	let uploadUrls = [];
+
+	if (Array.isArray(images.images) && images.images.length > 0) {
+		uploadUrls = images.images.map((image) => ({
+			data: image.data,
+			mimeType: image.mimetype,
+		}));
+	} else if (images.images) {
+		// Single image upload
+		uploadUrls.push({
+			data: images.images.data,
+			mimeType: images.images.mimeType,
+		});
+	}
+
+	return uploadUrls;
+};
 const getProjectQuery = async () => {
 	try {
 		let projectList = await projectModel.find();
@@ -98,7 +123,28 @@ const getProjectQuery = async () => {
 	}
 };
 
-const editProjectQuery = async (id, details) => {
+const editProjectQuery = async (id, details, images) => {
+	// console.log("images:::::    ", images);
+	let uploadUrls = [];
+	if (images) {
+		// console.log("Inside");
+		if (images.images.length > 0) {
+			for (let i = 0; i < images.images.length; i++) {
+				// let url = await uploadFile(images.images[i].data);
+				uploadUrls.push({
+					data: images.images[i].data,
+					mimeType: images.images[i].mimetype,
+				});
+			}
+			// console.log("upload urls", uploadUrls);
+		} else if (images.images) {
+			//for single image upload
+			uploadUrls.push({
+				data: images.images.data,
+				mimeType: images.images.mimeType,
+			});
+		}
+	}
 	try {
 		// console.log(id, details);
 		const existingProject = await projectModel.findById(id);
@@ -113,11 +159,18 @@ const editProjectQuery = async (id, details) => {
 		// Remove undefined fields to update only the ones provided
 		const updateFields = {};
 		for (const key in details) {
+			if (key == "images") {
+				continue;
+			}
 			if (details[key] !== undefined) {
 				updateFields[key] = details[key];
 			}
 		}
-		// console.log(updateFields)
+		// console.log("details", details);
+		if (images) {
+			updateFields.images = uploadUrls;
+		}
+		console.log("update fields:::::  ", updateFields);
 		const updatedProject = await projectModel.findOneAndUpdate(
 			{ _id: id }, // Assuming MongoDB, adjust key if using a different database
 			{ $set: updateFields }
