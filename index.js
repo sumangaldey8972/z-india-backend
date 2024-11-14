@@ -27,6 +27,7 @@ function setupMiddleware(app) {
     )
 }
 
+// console.log('comment')
 
 function setupRoutes(app) {
     app.use('/', serverRoutes)
