@@ -5,6 +5,7 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 const project_schema = mongoose.Schema(
   {
     project_name: { type: String },
+    sub_heading: { type: String },
     area: { type: String },
     city: { type: String },
     posted_on: { type: Date },

@@ -5,6 +5,7 @@ const createProjectQuery = async (details, images) => {
 	try {
 		const {
 			project_name,
+			sub_heading,
 			area,
 			city,
 			posted_on,
@@ -42,6 +43,7 @@ const createProjectQuery = async (details, images) => {
 
 		const newProject = await projectModel.create({
 			project_name: project_name,
+			sub_heading: sub_heading,
 			area: area,
 			city: city,
 			posted_on: posted_on,
