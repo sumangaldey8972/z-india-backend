@@ -5,8 +5,10 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 const project_schema = mongoose.Schema(
   {
     project_name: { type: String },
-    sub_heading: { type: String },
     area: { type: String },
+    sub_heading: { type: String },
+    length: { type: Number },
+    width: { type: Number },
     city: { type: String },
     posted_on: { type: Date },
     status: { type: String },
@@ -18,7 +20,7 @@ const project_schema = mongoose.Schema(
     overlooking: { type: String },
     posess_in: { type: Date },
     iframe_url: { type: String },
-    places_nearby: [{ icon: String, label: String }],
+    places_nearby: [{ icon: String, label: String, icon_type: String }],
     about_propoerty: { type: String },
   },
   { timestamps: true }
