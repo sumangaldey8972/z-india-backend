@@ -20,7 +20,7 @@ const project_schema = mongoose.Schema(
     overlooking: { type: String },
     posess_in: { type: Date },
     iframe_url: { type: String },
-    places_nearby: [{ icon: String, label: String, icon_type: String }],
+    places_nearby: [{ icon: String, label: String, icon_type: String, distance: String }],
     about_propoerty: { type: String },
   },
   { timestamps: true }
